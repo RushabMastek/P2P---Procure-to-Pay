@@ -28,7 +28,7 @@ function Login() {
 
     try {
       const res = await axios.post(
-        "http://localhost:5000/api/vendor/login",
+        "https://p2p-test-api-bdathcbzgghkhmes.centralindia-01.azurewebsites.net/api/vendor/login",
         form
       );
 

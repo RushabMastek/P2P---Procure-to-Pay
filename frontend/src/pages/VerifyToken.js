@@ -15,7 +15,7 @@ function VerifyToken() {
     }
 
     axios
-      .get(`http://localhost:5000/api/vendor/verify-token?token=${token}`)
+      .get(`https://p2p-test-api-bdathcbzgghkhmes.centralindia-01.azurewebsites.net/api/vendor/verify-token?token=${token}`)
       .then((res) => {
         const { status, email } = res.data;
         

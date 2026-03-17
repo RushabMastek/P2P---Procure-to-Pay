@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "https://p2p-test-api-bdathcbzgghkhmes.centralindia-01.azurewebsites.net/api"
+  baseURL: "https://p2p-test-api-bdathcbzgghkhmes.centralindia-01.azurewebsites.net"
 });
 
 // Attach JWT automatically

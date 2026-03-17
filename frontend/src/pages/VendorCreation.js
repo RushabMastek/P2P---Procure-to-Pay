@@ -62,7 +62,7 @@ const VendorCreation = () => {
       }
 
       const res = await axios.get(
-        `http://localhost:5000/api/vendor/vendor-details?email=${email}`
+        `https://p2p-test-api-bdathcbzgghkhmes.centralindia-01.azurewebsites.net/api/vendor/vendor-details?email=${email}`
       );
 
       const data = res.data;
@@ -446,7 +446,7 @@ const VendorCreation = () => {
       };
 
       await axios.post(
-        "http://localhost:5000/api/vendor/register",
+        "https://p2p-test-api-bdathcbzgghkhmes.centralindia-01.azurewebsites.net/api/vendor/register",
         payload
       );
 
