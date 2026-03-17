@@ -1,0 +1,94 @@
+import {
+  Container,
+  TextField,
+  Button,
+  Typography,
+  Box,
+  Paper,
+} from "@mui/material";
+import { useState } from "react";
+import axios from "axios";
+import { useLocation } from "react-router-dom";
+
+function Login() {
+  const location = useLocation();
+  const prefilledEmail = location.state?.email || "";
+
+  const [form, setForm] = useState({
+    email: prefilledEmail,
+    password: "",
+  });
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const res = await axios.post(
+        "http://localhost:5000/api/vendor/login",
+        form
+      );
+
+      alert("Login Successful");
+      console.log(res.data);
+    } catch (err) {
+      alert("Login Failed");
+    }
+  };
+
+  return (
+    <Container maxWidth="sm">
+      <Box
+        sx={{
+          height: "100vh",
+          display: "flex",
+          alignItems: "center",
+        }}
+      >
+        <Paper elevation={6} sx={{ p: 4, width: "100%", borderRadius: 3 }}>
+          <Typography variant="h5" align="center" gutterBottom>
+            Vendor Login
+          </Typography>
+
+          <form onSubmit={handleSubmit}>
+            <TextField
+              fullWidth
+              label="Email"
+              name="email"
+              value={form.email}
+              onChange={handleChange}
+              margin="normal"
+              required
+            />
+
+            <TextField
+              fullWidth
+              label="Password"
+              type="password"
+              name="password"
+              value={form.password}
+              onChange={handleChange}
+              margin="normal"
+              required
+            />
+
+            <Button
+              fullWidth
+              variant="contained"
+              size="large"
+              sx={{ mt: 2 }}
+              type="submit"
+            >
+              Login
+            </Button>
+          </form>
+        </Paper>
+      </Box>
+    </Container>
+  );
+}
+
+export default Login;

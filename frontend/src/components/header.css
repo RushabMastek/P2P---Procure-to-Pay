@@ -1,0 +1,40 @@
+.app-topbar {
+  background: linear-gradient(90deg, rgba(26,160,214,0.12), rgba(11,111,143,0.06));
+  border-bottom: 1px solid rgba(11,111,143,0.06);
+}
+
+.app-topbar-inner {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 10px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.brand-link {
+  color: var(--primary-dark);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.top-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.user-name {
+  color: var(--primary-dark);
+  font-weight: 600;
+}
+
+.btn.logout {
+  background: transparent;
+  border: 1px solid rgba(10,120,170,0.12);
+  color: var(--primary-dark);
+  padding: 6px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
