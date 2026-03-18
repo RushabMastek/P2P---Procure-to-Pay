@@ -1,10 +1,9 @@
 const axios = require('axios')
+const jwt = require('jsonwebtoken')
 const db = require('../config/db')   // ✅ your pool
 const sql = require('mssql')
 
-const { getAccessToken } = require('../utils/snAuth')
 
-const token = await getAccessToken()
 
 
 // =======================
@@ -13,6 +12,10 @@ const token = await getAccessToken()
 exports.verifyToken = async (req, res) => {
 
     try {
+
+        const { getAccessToken } = require('../utils/snAuth')
+
+        const accessToken = await getAccessToken()
 
         const token = req.query.token
 
@@ -36,7 +39,7 @@ exports.verifyToken = async (req, res) => {
                 {
                     params: { token },
                     headers: {
-                        Authorization: `Bearer ${token}`
+                        Authorization: `Bearer ${accessToken}`
                     }
                 }
             )
@@ -102,6 +105,10 @@ const bcrypt = require('bcryptjs')
 exports.registerVendor = async (req, res) => {
 
     try {
+
+        const { getAccessToken } = require('../utils/snAuth')
+
+        const accessToken = await getAccessToken()
 
         const {
             dunsNumber,
@@ -184,7 +191,7 @@ exports.registerVendor = async (req, res) => {
             },
             {
                 headers: {
-                        Authorization: `Bearer ${token}`
+                        Authorization: `Bearer ${accessToken}`
                 }
             }
         )
@@ -278,6 +285,10 @@ exports.loginVendor = async (req, res) => {
 exports.getVendorDetails = async (req, res) => {
     try {
 
+        const { getAccessToken } = require('../utils/snAuth')
+
+        const accessToken = await getAccessToken()
+
         const { email } = req.query
 
         if (!email) {
@@ -291,7 +302,7 @@ exports.getVendorDetails = async (req, res) => {
             `${process.env.SN_INSTANCE}/api/now/table/x_mast4_procure_2_vendor_onboarding`,
             {
                 headers: {
-                        Authorization: `Bearer ${token}`
+                        Authorization: `Bearer ${accessToken}`
                 },
                 params: {
                     sysparm_query: `contact_primary_email=${email}`,
