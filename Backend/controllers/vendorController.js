@@ -2,6 +2,10 @@ const axios = require('axios')
 const db = require('../config/db')   // ✅ your pool
 const sql = require('mssql')
 
+const { getAccessToken } = require('../utils/snAuth')
+
+const token = await getAccessToken()
+
 
 // =======================
 // 🔹 VERIFY TOKEN FLOW
@@ -31,9 +35,8 @@ exports.verifyToken = async (req, res) => {
                 `${process.env.SN_INSTANCE}/api/x_mast4_procure_2/vendorapi/verifyToken`,
                 {
                     params: { token },
-                    auth: {
-                        username: process.env.SN_USERNAME,
-                        password: process.env.SN_PASSWORD
+                    headers: {
+                        Authorization: `Bearer ${token}`
                     }
                 }
             )
@@ -180,9 +183,8 @@ exports.registerVendor = async (req, res) => {
                 declaration: declarationAgreed,
             },
             {
-                auth: {
-                    username: process.env.SN_USERNAME,
-                    password: process.env.SN_PASSWORD
+                headers: {
+                        Authorization: `Bearer ${token}`
                 }
             }
         )
@@ -288,9 +290,8 @@ exports.getVendorDetails = async (req, res) => {
         const response = await axios.get(
             `${process.env.SN_INSTANCE}/api/now/table/x_mast4_procure_2_vendor_onboarding`,
             {
-                auth: {
-                    username: process.env.SN_USERNAME,
-                    password: process.env.SN_PASSWORD
+                headers: {
+                        Authorization: `Bearer ${token}`
                 },
                 params: {
                     sysparm_query: `contact_primary_email=${email}`,
