@@ -302,7 +302,7 @@ exports.loginVendor = async (req, res) => {
     const token = jwt.sign(
         {
             id: user.id,
-            email: user.email || user.Email  // Handle both lowercase and uppercase
+            email: user.Email  // Handle both lowercase and uppercase
         },
         process.env.JWT_SECRET,
         { expiresIn: process.env.JWT_EXPIRES_IN }
@@ -312,8 +312,8 @@ exports.loginVendor = async (req, res) => {
         message: "Login successful",
         token,
         user: {
-            email: user.email || user.Email,  // Handle both lowercase and uppercase
-            name: user.Name || user.name       // Also include name for dashboard
+            email: user.Email,  // Handle both lowercase and uppercase
+            name: user.Name       // Also include name for dashboard
         }
     });
     } catch (err) {
