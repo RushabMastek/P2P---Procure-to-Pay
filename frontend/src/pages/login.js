@@ -57,7 +57,7 @@ function Login() {
       if (res.data.token) {
         // Store token and email in localStorage
         localStorage.setItem('token', res.data.token);
-        localStorage.setItem('userEmail', res.data.user.email);
+        localStorage.setItem('userEmail', res.data.user.Email);
         
         // Clear OTP verification flags
         localStorage.removeItem("otpVerified");
