@@ -9,6 +9,8 @@ import {
 import { useState } from "react";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
+import { useEffect } from "react"; // Add to existing useState import
+import { useNavigate } from "react-router-dom"; // Add to existing useLocation import
 
 function Login() {
   const location = useLocation();
@@ -18,6 +20,19 @@ function Login() {
     email: prefilledEmail,
     password: "",
   });
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+  // Check if user completed OTP verification
+    const otpVerified = localStorage.getItem("otpVerified");
+    const verifiedEmail = localStorage.getItem("verifiedEmail");
+    
+    if (!otpVerified || verifiedEmail !== prefilledEmail) {
+      alert("Please complete OTP verification first");
+      navigate("/verify");
+    }
+  }, [navigate, prefilledEmail]);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -33,6 +48,9 @@ function Login() {
       );
 
       alert("Login Successful");
+      localStorage.removeItem("otpVerified");
+      localStorage.removeItem("verifiedEmail");
+      localStorage.removeItem("email");
       console.log(res.data);
     } catch (err) {
       alert("Login Failed");

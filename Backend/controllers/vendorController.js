@@ -2,7 +2,7 @@ const axios = require('axios')
 const jwt = require('jsonwebtoken')
 const db = require('../config/db')   // ✅ your pool
 const sql = require('mssql')
-
+const { sendOTPEmail } = require('../utils/emailService');
 
 
 
@@ -70,17 +70,57 @@ exports.verifyToken = async (req, res) => {
             .input('email', sql.VarChar, email)
             .query('SELECT * FROM vendors WHERE email = @email')
 
-        // ✅ Step 5: Decide flow
+        // ✅ Step 5: Generate OTP for additional security
+    const otp = Math.floor(100000 + Math.random() * 900000).toString()
+
+    // Store OTP with 10-minute expiry
+    const expiryTime = new Date(Date.now() + 10 * 60 * 1000) // 10 minutes
+
+    try {
+        // Delete any existing OTPs for this email first
+        await db.request()
+            .input('email', sql.VarChar, email)
+            .query('DELETE FROM otp_verification WHERE email = @email')
+
+        // Insert new OTP
+        await db.request()
+            .input('email', sql.VarChar, email)
+            .input('otp', sql.VarChar, otp)
+            .input('expiry', sql.DateTime, expiryTime)
+            .query(`
+                INSERT INTO otp_verification (email, otp, expiry, created_at, attempts)
+                VALUES (@email, @otp, @expiry, GETDATE(), 0)
+            `)
+
+            // TODO: Send OTP via email service
+            // Example: await sendOTPEmail(email, otp)
+            await sendOTPEmail(email, otp);
+            // For testing only - REMOVE in production
+            console.log(`🔐 OTP for ${email}: ${otp}`)
+
+        } catch (otpError) {
+            console.error("OTP Generation Error:", otpError)
+            return res.status(500).json({
+                status: "error",
+                message: "Failed to generate OTP"
+            })
+        }
+
+        // ✅ Step 6: Decide flow and require OTP
         if (result.recordset.length > 0) {
             return res.json({
                 status: "login",
-                email: email
+                email: email,
+                requireOTP: true,
+                message: "OTP has been sent to your email"
             })
         }
 
         return res.json({
             status: "register",
-            email: email
+            email: email,
+            requireOTP: true,
+            message: "OTP has been sent to your email"
         })
 
     }
@@ -344,4 +384,168 @@ exports.getVendorDetails = async (req, res) => {
     }
 };
 
+
+// =======================
+// 🔹 VERIFY OTP
+// =======================
+exports.verifyOTP = async (req, res) => {
+    try {
+        const { email, otp } = req.body
+
+        console.log("OTP Verification Request:", { email, otp })
+
+        // ✅ Validate input
+        if (!email || !otp) {
+            return res.status(400).json({
+                success: false,
+                message: "Email and OTP are required"
+            })
+        }
+
+        // ✅ Validate OTP format (6 digits)
+        if (!/^\d{6}$/.test(otp)) {
+            return res.status(400).json({
+                success: false,
+                message: "OTP must be 6 digits"
+            })
+        }
+
+        // ✅ Get OTP from database
+        const result = await db.request()
+            .input('email', sql.VarChar, email)
+            .query(`
+                SELECT * FROM otp_verification 
+                WHERE email = @email 
+                ORDER BY created_at DESC
+            `)
+
+        if (result.recordset.length === 0) {
+            return res.status(401).json({
+                success: false,
+                message: "No OTP found for this email. Please request a new one."
+            })
+        }
+
+        const otpRecord = result.recordset[0]
+
+        // ✅ Check if OTP has expired
+        if (new Date() > new Date(otpRecord.expiry)) {
+            // Delete expired OTP
+            await db.request()
+                .input('email', sql.VarChar, email)
+                .query('DELETE FROM otp_verification WHERE email = @email')
+
+            return res.status(401).json({
+                success: false,
+                message: "OTP has expired. Please request a new verification link."
+            })
+        }
+
+        // ✅ Check maximum attempts (prevent brute force)
+        if (otpRecord.attempts >= 5) {
+            await db.request()
+                .input('email', sql.VarChar, email)
+                .query('DELETE FROM otp_verification WHERE email = @email')
+
+            return res.status(401).json({
+                success: false,
+                message: "Too many failed attempts. Please request a new verification link."
+            })
+        }
+
+        // ✅ Verify OTP
+        if (otpRecord.otp !== otp) {
+            // Increment failed attempts
+            await db.request()
+                .input('email', sql.VarChar, email)
+                .query(`
+                    UPDATE otp_verification 
+                    SET attempts = attempts + 1 
+                    WHERE email = @email
+                `)
+
+            const remainingAttempts = 5 - (otpRecord.attempts + 1)
+            return res.status(401).json({
+                success: false,
+                message: `Invalid OTP. ${remainingAttempts} attempts remaining.`
+            })
+        }
+
+        // ✅ OTP is valid - Delete it (single use)
+        await db.request()
+            .input('email', sql.VarChar, email)
+            .query('DELETE FROM otp_verification WHERE email = @email')
+
+        // ✅ Check if vendor exists for routing
+        const vendorCheck = await db.request()
+            .input('email', sql.VarChar, email)
+            .query('SELECT * FROM vendors WHERE email = @email')
+
+        const isExisting = vendorCheck.recordset.length > 0
+
+        return res.json({
+            success: true,
+            message: "OTP verified successfully",
+            status: isExisting ? "login" : "register",
+            email: email
+        })
+
+    } catch (err) {
+        console.error("OTP Verification Error:", err)
+        res.status(500).json({
+            success: false,
+            message: "Server error during OTP verification"
+        })
+    }
+}
+
+// =======================
+// 🔹 RESEND OTP
+// =======================
+exports.resendOTP = async (req, res) => {
+    try {
+        const { email } = req.body
+
+        if (!email) {
+            return res.status(400).json({
+                success: false,
+                message: "Email is required"
+            })
+        }
+
+        // Generate new OTP
+        const otp = Math.floor(100000 + Math.random() * 900000).toString()
+        const expiryTime = new Date(Date.now() + 10 * 60 * 1000)
+
+        // Delete old OTP
+        await db.request()
+            .input('email', sql.VarChar, email)
+            .query('DELETE FROM otp_verification WHERE email = @email')
+
+        // Insert new OTP
+        await db.request()
+            .input('email', sql.VarChar, email)
+            .input('otp', sql.VarChar, otp)
+            .input('expiry', sql.DateTime, expiryTime)
+            .query(`
+                INSERT INTO otp_verification (email, otp, expiry, created_at, attempts)
+                VALUES (@email, @otp, @expiry, GETDATE(), 0)
+            `)
+
+        // TODO: Send OTP via email
+        console.log(`🔐 Resent OTP for ${email}: ${otp}`)
+
+        return res.json({
+            success: true,
+            message: "New OTP has been sent to your email"
+        })
+
+    } catch (err) {
+        console.error("Resend OTP Error:", err)
+        res.status(500).json({
+            success: false,
+            message: "Failed to resend OTP"
+        })
+    }
+}
 

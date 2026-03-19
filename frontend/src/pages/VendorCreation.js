@@ -1,10 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import '../styles/VendorCreation.css';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 // import { useLocation } from "react-router-dom";
 
 const VendorCreation = () => {
 
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Check if user completed OTP verification
+    const otpVerified = localStorage.getItem("otpVerified");
+    const verifiedEmail = localStorage.getItem("verifiedEmail");
+    const email = localStorage.getItem("email");
+    
+    if (!otpVerified || !verifiedEmail || verifiedEmail !== email) {
+      alert("Please complete OTP verification first");
+      navigate("/verify");
+      return;
+    }
+  }, [navigate]);
   // const location = useLocation();
   // const email = location.state?.email;
 
@@ -451,6 +466,11 @@ const VendorCreation = () => {
       );
 
       alert("Vendor Registered Successfully");
+
+      localStorage.removeItem("otpVerified");
+      localStorage.removeItem("verifiedEmail");
+      localStorage.removeItem("email");
+      localStorage.removeItem("sys_id");
 
     } catch (err) {
       console.error("Submit Error:", err.response?.data || err.message);

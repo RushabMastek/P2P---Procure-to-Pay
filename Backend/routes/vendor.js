@@ -6,6 +6,9 @@ const vendorController = require('../controllers/vendorController')
 
 router.get('/verify-token',vendorController.verifyToken)
 
+router.post('/verify-otp', vendorController.verifyOTP)
+router.post('/resend-otp', vendorController.resendOTP)
+
 router.post('/register',vendorController.registerVendor)
 
 router.post('/login',vendorController.loginVendor)

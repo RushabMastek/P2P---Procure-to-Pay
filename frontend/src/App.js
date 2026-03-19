@@ -4,6 +4,7 @@ import Login from "./pages/login";
 import Register from "./pages/VendorCreation";
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "./theme";
+import OTPVerification from "./pages/OTPVerification";
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/verify" element={<VerifyToken />} />
+          <Route path="/verify-otp" element={<OTPVerification />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
       </Routes>

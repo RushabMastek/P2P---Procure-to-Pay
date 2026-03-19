@@ -17,16 +17,22 @@ function VerifyToken() {
     axios
       .get(`https://p2p-test-api-bdathcbzgghkhmes.centralindia-01.azurewebsites.net/api/vendor/verify-token?token=${token}`)
       .then((res) => {
-        const { status, email } = res.data;
+        const { status, email, requireOTP, message } = res.data;
         
         localStorage.setItem("email", email);
 
-        if (status === "login") {
-          navigate("/login", { state: { email } });
-        } else if (status === "register") {
-          navigate("/register", { state: { email } });
+        // Navigate to OTP verification page
+        if (requireOTP) {
+          navigate("/verify-otp", { state: { email, status } });
         } else {
-          alert("Unauthorized");
+          // Fallback if OTP is not required
+          if (status === "login") {
+            navigate("/login", { state: { email } });
+          } else if (status === "register") {
+            navigate("/register", { state: { email } });
+          } else {
+            alert("Unauthorized");
+          }
         }
       })
       .catch(() => {
