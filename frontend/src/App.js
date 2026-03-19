@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import VerifyToken from "./pages/VerifyToken";
 import Login from "./pages/login";
 import Register from "./pages/VendorCreation";
@@ -12,6 +12,7 @@ function App() {
     <ThemeProvider theme={theme}>
       <BrowserRouter>
         <Routes>
+          <Route path="/" element={<Navigate to="/login" replace />} />
           <Route path="/verify" element={<VerifyToken />} />
           <Route path="/verify-otp" element={<OTPVerification />} />
           <Route path="/login" element={<Login />} />

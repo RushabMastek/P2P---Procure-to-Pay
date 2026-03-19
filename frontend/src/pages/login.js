@@ -28,14 +28,6 @@ function Login() {
 
   useEffect(() => {
   // Check if user completed OTP verification
-    const otpVerified = localStorage.getItem("otpVerified");
-    const verifiedEmail = localStorage.getItem("verifiedEmail");
-    
-    if (!otpVerified || verifiedEmail !== prefilledEmail) {
-      alert("Please complete OTP verification first");
-      navigate("/verify");
-    }
-    
     if (successMessage) {
     alert(successMessage);
   }
