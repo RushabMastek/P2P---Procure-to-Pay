@@ -549,3 +549,130 @@ exports.resendOTP = async (req, res) => {
     }
 }
 
+
+// =======================
+// 🔹 GET PENDING TASKS
+// =======================
+exports.getPendingTasks = async (req, res) => {
+    try {
+        const { email } = req.query;
+
+        if (!email) {
+            return res.status(400).json({
+                message: "Email is required"
+            });
+        }
+
+        // TODO: Replace with actual database query
+        // This is mock data for now
+        const mockTasks = [
+            {
+                title: "Complete Vendor Profile",
+                description: "Please complete all required fields in your vendor profile",
+                priority: "high",
+                dueDate: "2024-03-25",
+                status: "In Progress"
+            },
+            {
+                title: "Submit Tax Documents",
+                description: "Submit W-9 form and tax certification documents",
+                priority: "high",
+                dueDate: "2024-03-28",
+                status: "Pending"
+            },
+            {
+                title: "Review Service Agreement",
+                description: "Review and sign the master service agreement",
+                priority: "medium",
+                dueDate: "2024-04-01",
+                status: "Pending"
+            }
+        ];
+
+        // Actual database query (uncomment when ready):
+        // const tasks = await db.request()
+        //     .input('email', sql.VarChar, email)
+        //     .query(`
+        //         SELECT title, description, priority, due_date as dueDate, status 
+        //         FROM vendor_tasks 
+        //         WHERE vendor_email = @email AND status != 'Completed'
+        //         ORDER BY priority DESC, due_date ASC
+        //     `);
+
+        res.json({
+            success: true,
+            tasks: mockTasks // Replace with: tasks.recordset
+        });
+
+    } catch (err) {
+        console.error("Get Pending Tasks Error:", err);
+        res.status(500).json({
+            message: "Error fetching pending tasks"
+        });
+    }
+};
+
+// =======================
+// 🔹 GET CATALOG ITEMS
+// =======================
+exports.getCatalogItems = async (req, res) => {
+    try {
+        const { email } = req.query;
+
+        if (!email) {
+            return res.status(400).json({
+                message: "Email is required"
+            });
+        }
+
+        // TODO: Replace with actual database query
+        // This is mock data for now
+        const mockCatalogItems = [
+            {
+                name: "Office Supplies",
+                description: "Standard office supplies package including pens, paper, and folders",
+                price: "299.99",
+                status: "active"
+            },
+            {
+                name: "IT Equipment",
+                description: "Computers, monitors, and accessories for office setup",
+                price: "1,499.99",
+                status: "active"
+            },
+            {
+                name: "Furniture Package",
+                description: "Desk, chair, and storage solutions",
+                price: "899.99",
+                status: "pending"
+            },
+            {
+                name: "Software Licenses",
+                description: "Annual licenses for productivity software suite",
+                price: "499.99",
+                status: "active"
+            }
+        ];
+
+        // Actual database query (uncomment when ready):
+        // const items = await db.request()
+        //     .input('email', sql.VarChar, email)
+        //     .query(`
+        //         SELECT name, description, price, status 
+        //         FROM catalog_items 
+        //         WHERE vendor_email = @email OR is_public = 1
+        //         ORDER BY created_at DESC
+        //     `);
+
+        res.json({
+            success: true,
+            items: mockCatalogItems // Replace with: items.recordset
+        });
+
+    } catch (err) {
+        console.error("Get Catalog Items Error:", err);
+        res.status(500).json({
+            message: "Error fetching catalog items"
+        });
+    }
+};

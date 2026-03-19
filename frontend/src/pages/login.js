@@ -10,18 +10,22 @@ import { useState } from "react";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react"; // Add to existing useState import
-import { useNavigate } from "react-router-dom"; // Add to existing useLocation import
+import { useLocation, useNavigate } from "react-router-dom";
 
 function Login() {
   const location = useLocation();
+  const navigate = useNavigate();
   const prefilledEmail = location.state?.email || "";
+  const successMessage = location.state?.message || "";
 
   const [form, setForm] = useState({
     email: prefilledEmail,
     password: "",
   });
 
-  const navigate = useNavigate();
+  
+
+  // const navigate = useNavigate();
 
   useEffect(() => {
   // Check if user completed OTP verification
@@ -32,7 +36,11 @@ function Login() {
       alert("Please complete OTP verification first");
       navigate("/verify");
     }
-  }, [navigate, prefilledEmail]);
+    
+    if (successMessage) {
+    alert(successMessage);
+  }
+  }, [navigate, prefilledEmail, successMessage]);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -47,13 +55,25 @@ function Login() {
         form
       );
 
-      alert("Login Successful");
-      localStorage.removeItem("otpVerified");
-      localStorage.removeItem("verifiedEmail");
-      localStorage.removeItem("email");
-      console.log(res.data);
+      if (res.data.token) {
+        // Store token and email in localStorage
+        localStorage.setItem('token', res.data.token);
+        localStorage.setItem('userEmail', res.data.user.email);
+        
+        // Clear OTP verification flags
+        localStorage.removeItem("otpVerified");
+        localStorage.removeItem("verifiedEmail");
+        localStorage.removeItem("email");
+        
+        // Show success message
+        alert("Login Successful!");
+        
+        // Redirect to dashboard
+        navigate("/dashboard");
+      }
     } catch (err) {
-      alert("Login Failed");
+      console.error("Login error:", err);
+      alert(err.response?.data?.message || "Login Failed. Please check your credentials.");
     }
   };
 

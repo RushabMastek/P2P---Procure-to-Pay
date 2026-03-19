@@ -472,6 +472,16 @@ const VendorCreation = () => {
       localStorage.removeItem("email");
       localStorage.removeItem("sys_id");
 
+      // Show success message and redirect
+      setTimeout(() => {
+        navigate("/login", { 
+          state: { 
+            email: formData.primaryEmail,
+            message: "Registration successful! Please login to continue." 
+          } 
+        });
+      }, 2000); // 2 second delay to show success message
+
     } catch (err) {
       console.error("Submit Error:", err.response?.data || err.message);
       alert("Registration Failed");
