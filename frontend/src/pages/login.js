@@ -58,7 +58,7 @@ function Login() {
         // Store token and email in localStorage
         console.log("Login successful, token received:", JSON.stringify(res.data));
         localStorage.setItem('token', res.data.token);
-        localStorage.setItem('userEmail', res.data.user.Email);
+        localStorage.setItem('userEmail', res.data.user.email);
         
         // Clear OTP verification flags
         localStorage.removeItem("otpVerified");
