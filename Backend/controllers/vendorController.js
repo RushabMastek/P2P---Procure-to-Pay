@@ -299,23 +299,23 @@ exports.loginVendor = async (req, res) => {
             })
         }
 
-       const token = jwt.sign(
-            {
-                id: user.id,
-                email: user.email
-            },
-            process.env.JWT_SECRET,
-            { expiresIn: process.env.JWT_EXPIRES_IN }
-        );
+    const token = jwt.sign(
+        {
+            id: user.id,
+            email: user.email || user.Email  // Handle both lowercase and uppercase
+        },
+        process.env.JWT_SECRET,
+        { expiresIn: process.env.JWT_EXPIRES_IN }
+    );
 
-        return res.json({
-            message: "Login successful",
-            token,
-            user: {
-                email: user.email
-            }
-        });
-
+    return res.json({
+        message: "Login successful",
+        token,
+        user: {
+            email: user.email || user.Email,  // Handle both lowercase and uppercase
+            name: user.Name || user.name       // Also include name for dashboard
+        }
+    });
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: "Server error" });
