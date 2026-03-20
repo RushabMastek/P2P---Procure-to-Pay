@@ -245,7 +245,7 @@ function ExternalQuestionnaireForm() {
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <Button
             variant="ghost"
-            onClick={() => navigate('/')}
+            onClick={() => navigate('/dashboard')}
             className="gap-2"
           >
             <Home className="h-4 w-4" />
