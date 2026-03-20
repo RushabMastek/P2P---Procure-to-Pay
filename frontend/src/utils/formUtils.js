@@ -1,4 +1,4 @@
-import { formSchema, isFieldVisible, isFieldRequired } from '@/data/formSchema';
+import { formSchema, isFieldVisible, isFieldRequired } from '../data/formSchema';
 
 // Calculate overall form completion percentage
 export const calculateFormProgress = (formData, errors) => {
