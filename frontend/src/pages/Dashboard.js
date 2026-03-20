@@ -8,7 +8,7 @@ function Dashboard() {
   
   // State management
   const [vendorDetails, setVendorDetails] = useState(null);
-  const [pendingTasks, setPendingTasks] = useState([]);
+  // const [pendingTasks, setPendingTasks] = useState([]);
   const [catalogItems, setCatalogItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
@@ -27,7 +27,7 @@ function Dashboard() {
     // Fetch vendor details
     fetchVendorDetails(email, token);
     // Fetch pending tasks
-    fetchPendingTasks(email, token);
+    // fetchPendingTasks(email, token);
     // Fetch catalog items
     fetchCatalogItems(email, token);
   }, [navigate]);
@@ -53,20 +53,20 @@ function Dashboard() {
   };
 
   // Fetch pending tasks
-  const fetchPendingTasks = async (email, token) => {
-    try {
-      const response = await axios.get(
-        `https://p2p-test-api-bdathcbzgghkhmes.centralindia-01.azurewebsites.net/api/vendor/pending-tasks?email=${email}`,
-        {
-          headers: { Authorization: `Bearer ${token}` }
-        }
-      );
-      setPendingTasks(response.data.tasks || []);
-    } catch (error) {
-      console.error('Error fetching pending tasks:', error);
-      setPendingTasks([]);
-    }
-  };
+  // const fetchPendingTasks = async (email, token) => {
+  //   try {
+  //     const response = await axios.get(
+  //       `https://p2p-test-api-bdathcbzgghkhmes.centralindia-01.azurewebsites.net/api/vendor/pending-tasks?email=${email}`,
+  //       {
+  //         headers: { Authorization: `Bearer ${token}` }
+  //       }
+  //     );
+  //     setPendingTasks(response.data.tasks || []);
+  //   } catch (error) {
+  //     console.error('Error fetching pending tasks:', error);
+  //     setPendingTasks([]);
+  //   }
+  // };
 
   // Fetch catalog items
   const fetchCatalogItems = async (email, token) => {
@@ -186,41 +186,25 @@ function Dashboard() {
         {/* Dashboard Grid */}
         <div className="dashboard-grid">
           {/* Pending Tasks Section */}
+          {/* External Questionnaire Section */}
           <section className="dashboard-section pending-tasks-section">
             <div className="section-header">
-              <h3>Pending Tasks</h3>
-              <span className="task-count">{pendingTasks.length} tasks</span>
+              <h3>External Questionnaire</h3>
             </div>
 
             <div className="section-content">
-              {pendingTasks.length === 0 ? (
-                <div className="empty-state">
-                  <div className="empty-icon">✓</div>
-                  <p>No pending tasks</p>
-                  <span>You're all caught up!</span>
-                </div>
-              ) : (
-                <div className="tasks-list">
-                  {pendingTasks.map((task, index) => (
-                    <div key={index} className="task-item">
-                      <div className="task-icon">
-                        <span className="task-priority" data-priority={task.priority}>
-                          {task.priority === 'high' ? '🔴' : task.priority === 'medium' ? '🟡' : '🟢'}
-                        </span>
-                      </div>
-                      <div className="task-details">
-                        <h4 className="task-title">{task.title}</h4>
-                        <p className="task-description">{task.description}</p>
-                        <div className="task-meta">
-                          <span className="task-due">Due: {task.dueDate}</span>
-                          <span className="task-status">{task.status}</span>
-                        </div>
-                      </div>
-                      <button className="task-action-btn">View</button>
-                    </div>
-                  ))}
-                </div>
-              )}
+              <div className="empty-state">
+                <div className="empty-icon">📋</div>
+                <p>Complete Your Questionnaire</p>
+                <span>Fill out the external vendor questionnaire form</span>
+                <button 
+                  className="task-action-btn"
+                  onClick={() => navigate('/questionnaire')}
+                  style={{ marginTop: '16px', padding: '8px 16px' }}
+                >
+                  Go to Questionnaire
+                </button>
+              </div>
             </div>
           </section>
 
