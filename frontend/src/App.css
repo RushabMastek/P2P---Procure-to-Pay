@@ -1,6 +1,6 @@
 .App {
   text-align: left;
-  font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  /* font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif; */
   background: #f6fbfd;
   min-height: 100vh;
   color: #073044;
@@ -173,7 +173,7 @@
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 14px;
-  font-family: "Inter", sans-serif;
+  /* font-family: "Inter", sans-serif; */
   min-width: 220px;
 }
 
