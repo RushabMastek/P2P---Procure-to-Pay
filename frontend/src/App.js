@@ -3,6 +3,7 @@ import VerifyToken from "./pages/VerifyToken";
 import Login from "./pages/login";
 import Register from "./pages/VendorCreation";
 import Dashboard from "./pages/Dashboard";
+import ExternalQuestionnaireForm from './pages/ExternalQuestionnaireForm';
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "./theme";
 import OTPVerification from "./pages/OTPVerification";
@@ -17,6 +18,7 @@ function App() {
           <Route path="/verify-otp" element={<OTPVerification />} />
           <Route path="/login" element={<Login />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/questionnaire" element={<ExternalQuestionnaireForm />} />
           <Route path="/register" element={<Register />} />
       </Routes>
     </BrowserRouter>
