@@ -1,6 +1,6 @@
 import React from 'react';
 import FormField from './FormField';
-import { Card } from '../components/ui/card';
+import { Card } from '../ui/card';
 import { isFieldVisible } from '../../data/formSchema';
 
 const FormContent = ({ section, formData, onChange, errors }) => {

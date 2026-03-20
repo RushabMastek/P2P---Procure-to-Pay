@@ -1,15 +1,15 @@
 import React from 'react';
-import { Input } from '../components/ui/input';
-import { Label } from '../components/ui/label';
-import { Textarea } from '../components/ui/textarea';
+import { Input } from '../ui/input';
+import { Label } from '../ui/label';
+import { Textarea } from '../ui/textarea';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '../components/ui/select';
-import { Checkbox } from '../components/ui/checkbox';
+} from '../ui/select';
+import { Checkbox } from '../ui/checkbox';
 import { AlertCircle } from 'lucide-react';
 
 const FormField = ({ field, value, onChange, error }) => {

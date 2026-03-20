@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollArea } from '../components/ui/scroll-area';
+import { ScrollArea } from '../ui/scroll-area';
 import { CheckCircle2, Circle } from 'lucide-react';
 import { cn } from '../../lib/utils';
 
