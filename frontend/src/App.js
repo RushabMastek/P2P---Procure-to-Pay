@@ -3,7 +3,7 @@ import VerifyToken from "./pages/VerifyToken";
 import Login from "./pages/login";
 import Register from "./pages/VendorCreation";
 import Dashboard from "./pages/Dashboard";
-import ExternalQuestionnaireForm from './pages/ExternalQuestionnaireForm';
+import ExternalQuestionnaireForm from './pages/ExternalQuestionaireForm';
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "./theme";
 import OTPVerification from "./pages/OTPVerification";

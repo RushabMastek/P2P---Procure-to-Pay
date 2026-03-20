@@ -1,5 +1,5 @@
 import React from 'react';
-import { Progress } from '@/components/ui/progress';
+import { Progress } from '../components/ui/progress';
 import { CheckCircle2 } from 'lucide-react';
 
 const ProgressBar = ({ progress, currentSection, totalSections }) => {
